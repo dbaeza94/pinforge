@@ -3,32 +3,650 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Privacy Policy - PinForge</title>
+  <title>Privacy Policy — PinForge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; max-width: 700px; margin: 60px auto; padding: 0 24px; color: #1a1a1a; line-height: 1.7; }
-    h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
-    h2 { font-size: 16px; font-weight: 600; margin-top: 32px; }
-    p, li { font-size: 15px; color: #444; }
-    .meta { font-size: 13px; color: #888; margin-bottom: 40px; }
-    hr { border: none; border-top: 1px solid #eee; margin: 40px 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #050505;
+      --surface:  #0e0e12;
+      --card:     #111116;
+      --card-in:  #0a0a0f;
+      --border:   rgba(255,255,255,0.06);
+      --border-hi: rgba(255,255,255,0.10);
+      --text:     #f0f0f5;
+      --subtle:   #8080a0;
+      --muted:    #3a3a50;
+      --lime:     #d4ff4e;
+      --lime-dim: rgba(212,255,78,0.08);
+      --lime-glow: rgba(212,255,78,0.15);
+      --spring:   cubic-bezier(0.32,0.72,0,1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Geist', sans-serif;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Noise overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+    }
+
+    /* ── Radial orb ── */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(80px);
+    }
+    .orb-1 {
+      width: 600px; height: 600px;
+      top: -200px; left: -100px;
+      background: radial-gradient(circle, rgba(212,255,78,0.06) 0%, transparent 70%);
+    }
+    .orb-2 {
+      width: 400px; height: 400px;
+      bottom: 10%; right: -80px;
+      background: radial-gradient(circle, rgba(78,100,255,0.05) 0%, transparent 70%);
+    }
+
+    /* ── Floating nav pill ── */
+    .nav-pill {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 10px 20px;
+      background: rgba(14,14,18,0.7);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--border-hi);
+      border-radius: 99px;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+      white-space: nowrap;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text);
+    }
+
+    .nav-logo-mark {
+      width: 22px; height: 22px;
+      background: var(--lime);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-sep {
+      width: 1px;
+      height: 16px;
+      background: var(--border-hi);
+    }
+
+    .nav-label {
+      font-size: 12px;
+      color: var(--subtle);
+      font-weight: 400;
+    }
+
+    .nav-date {
+      font-size: 11px;
+      font-family: 'Geist Mono', monospace;
+      color: var(--muted);
+      padding: 3px 10px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 99px;
+      border: 1px solid var(--border);
+    }
+
+    /* ── Layout ── */
+    .wrapper {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      min-height: 100dvh;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 32px;
+      gap: 80px;
+    }
+
+    /* ── Left sidebar ── */
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 0;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: var(--lime-dim);
+      border: 1px solid rgba(212,255,78,0.15);
+      border-radius: 99px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--lime);
+      margin-bottom: 28px;
+      width: fit-content;
+    }
+
+    .sidebar-title {
+      font-size: clamp(38px, 4vw, 52px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.0;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .sidebar-title em {
+      font-style: normal;
+      color: var(--lime);
+    }
+
+    .sidebar-desc {
+      font-size: 14px;
+      color: var(--subtle);
+      line-height: 1.7;
+      max-width: 260px;
+      margin-bottom: 40px;
+    }
+
+    /* Section nav */
+    .section-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .section-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.25s var(--spring);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .section-nav-item:hover {
+      color: var(--subtle);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .section-nav-item.active {
+      color: var(--lime);
+      background: var(--lime-dim);
+    }
+
+    .section-nav-item .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 99px;
+      background: currentColor;
+      flex-shrink: 0;
+      transition: all 0.25s var(--spring);
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding-top: 40px;
+      font-size: 11px;
+      color: var(--muted);
+      font-family: 'Geist Mono', monospace;
+      line-height: 1.8;
+    }
+
+    /* ── Right content ── */
+    .content {
+      padding: 140px 0 100px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ── Section card (Double-Bezel) ── */
+    .section-card {
+      /* Outer shell */
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 3px;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.6), 0 16px 48px rgba(0,0,0,0.35);
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s var(--spring), transform 0.7s var(--spring), box-shadow 0.4s var(--spring);
+    }
+
+    .section-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section-card:hover {
+      box-shadow: 0 0 0 1px rgba(212,255,78,0.08), 0 20px 60px rgba(0,0,0,0.4);
+    }
+
+    .section-card-inner {
+      /* Inner core */
+      background: var(--card);
+      border-radius: calc(24px - 3px);
+      padding: 32px 36px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .section-card-inner::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+    }
+
+    .section-num {
+      font-size: 10px;
+      font-family: 'Geist Mono', monospace;
+      color: var(--lime);
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-num::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(212,255,78,0.12);
+      max-width: 48px;
+    }
+
+    .section-heading {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      color: var(--text);
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .section-body {
+      font-size: 14.5px;
+      color: var(--subtle);
+      line-height: 1.75;
+    }
+
+    .section-body strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* Service chips */
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border-hi);
+      border-radius: 99px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--subtle);
+      transition: all 0.25s var(--spring);
+    }
+
+    .chip:hover {
+      background: rgba(255,255,255,0.07);
+      color: var(--text);
+      transform: translateY(-1px);
+    }
+
+    .chip-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 99px;
+    }
+
+    /* Contact card special */
+    .contact-card .section-card-inner {
+      background: linear-gradient(135deg, #0e0e14 0%, #111118 100%);
+    }
+
+    .contact-email {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 20px;
+      padding: 12px 20px;
+      background: rgba(212,255,78,0.06);
+      border: 1px solid rgba(212,255,78,0.15);
+      border-radius: 12px;
+      font-family: 'Geist Mono', monospace;
+      font-size: 13px;
+      color: var(--lime);
+      text-decoration: none;
+      transition: all 0.3s var(--spring);
+      width: fit-content;
+    }
+
+    .contact-email:hover {
+      background: rgba(212,255,78,0.10);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(212,255,78,0.1);
+    }
+
+    /* Footer */
+    .page-footer {
+      position: relative;
+      z-index: 2;
+      border-top: 1px solid var(--border);
+      padding: 40px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--subtle);
+    }
+
+    .footer-copy {
+      font-size: 12px;
+      color: var(--muted);
+      font-family: 'Geist Mono', monospace;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .nav-pill { display: none; }
+      .wrapper {
+        grid-template-columns: 1fr;
+        padding: 0 20px;
+        gap: 0;
+      }
+      .sidebar {
+        position: relative;
+        height: auto;
+        padding: 100px 0 40px;
+      }
+      .section-nav { display: none; }
+      .sidebar-footer { display: none; }
+      .content { padding: 0 0 80px; }
+      .section-card-inner { padding: 24px 22px; }
+      .page-footer { flex-direction: column; gap: 12px; text-align: center; padding: 32px 20px; }
+    }
   </style>
 </head>
 <body>
-  <h1>Privacy Policy</h1>
-  <div class="meta">PinForge - Last updated: June 2026</div>
-  <h2>1. Overview</h2>
-  <p>PinForge is a personal content management tool used exclusively by its developer to manage Pinterest and Instagram accounts owned by that individual. This application is not available to the public.</p>
-  <h2>2. Data Collection</h2>
-  <p>PinForge does not collect, store, or process personal data from any third party. The application interacts solely with the Pinterest API and Instagram Graph API on behalf of the account owner.</p>
-  <h2>3. Data Storage</h2>
-  <p>API credentials are stored locally on the developers own device. No data is transmitted to any third-party server operated by PinForge.</p>
-  <h2>4. Third-Party Services</h2>
-  <p>This application uses: Pinterest API v5 and Meta Graph API, each subject to their own privacy policies.</p>
-  <h2>5. No Data Sharing</h2>
-  <p>No personal data or API response data is shared with any third party by PinForge.</p>
-  <h2>6. Contact</h2>
-  <p>Questions: diego.baeza.h@gmail.com</p>
-  <hr />
-  <p style="font-size:13px;color:#aaa;">2026 PinForge. All rights reserved.</p>
+
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <!-- ── Floating nav pill ── -->
+  <nav class="nav-pill" aria-label="Site navigation">
+    <div class="nav-logo">
+      <div class="nav-logo-mark">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#050505" stroke-width="2.8"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      PinForge
+    </div>
+    <div class="nav-sep"></div>
+    <span class="nav-label">Privacy Policy</span>
+    <span class="nav-date">June 2026</span>
+  </nav>
+
+  <!-- ── Main layout ── -->
+  <div class="wrapper">
+
+    <!-- Left sidebar -->
+    <aside class="sidebar" aria-label="Table of contents">
+      <div class="eyebrow">
+        <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Legal Document
+      </div>
+
+      <h1 class="sidebar-title">
+        Privacy<br /><em>Policy</em>
+      </h1>
+
+      <p class="sidebar-desc">
+        This document explains how PinForge handles data in relation to the Pinterest and Instagram APIs.
+      </p>
+
+      <nav class="section-nav" aria-label="Sections">
+        <a href="#overview"       class="section-nav-item active"><span class="dot"></span>Overview</a>
+        <a href="#data-collection" class="section-nav-item"><span class="dot"></span>Data Collection</a>
+        <a href="#data-storage"   class="section-nav-item"><span class="dot"></span>Data Storage</a>
+        <a href="#third-party"    class="section-nav-item"><span class="dot"></span>Third-Party Services</a>
+        <a href="#no-sharing"     class="section-nav-item"><span class="dot"></span>No Data Sharing</a>
+        <a href="#contact"        class="section-nav-item"><span class="dot"></span>Contact</a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div>Effective date</div>
+        <div style="color: #d4ff4e; margin-top:2px;">01 June 2026</div>
+        <div style="margin-top:12px;">Applies to</div>
+        <div style="color: #6060a0; margin-top:2px;">PinForge v2.0+</div>
+      </div>
+    </aside>
+
+    <!-- Right content -->
+    <main class="content" id="main-content">
+
+      <!-- 01 Overview -->
+      <article class="section-card" id="overview" data-delay="0">
+        <div class="section-card-inner">
+          <div class="section-num">01</div>
+          <h2 class="section-heading">Overview</h2>
+          <p class="section-body">
+            PinForge is a <strong>personal content management tool</strong> developed and operated exclusively by its creator to manage Pinterest and Instagram accounts that are owned by that individual.
+            <br /><br />
+            This application is <strong>not publicly available</strong>, has no registered end-users, and does not provide any service to third parties. All interactions with external platforms are performed solely on behalf of the account owner.
+          </p>
+        </div>
+      </article>
+
+      <!-- 02 Data Collection -->
+      <article class="section-card" id="data-collection" data-delay="80">
+        <div class="section-card-inner">
+          <div class="section-num">02</div>
+          <h2 class="section-heading">Data Collection</h2>
+          <p class="section-body">
+            PinForge does <strong>not collect, process, or store personal data</strong> from any third party. No analytics, telemetry, crash reporting, or tracking mechanisms are embedded in the application.
+            <br /><br />
+            API responses received from Pinterest and Instagram (such as pin metrics, post insights, or account analytics) are used exclusively in real-time to display information to the account owner and are not persisted on any remote server.
+          </p>
+        </div>
+      </article>
+
+      <!-- 03 Data Storage -->
+      <article class="section-card" id="data-storage" data-delay="160">
+        <div class="section-card-inner">
+          <div class="section-num">03</div>
+          <h2 class="section-heading">Data Storage</h2>
+          <p class="section-body">
+            API credentials (access tokens, user IDs, and API keys) are stored exclusively in two locations, both under the sole control of the account owner:
+          </p>
+          <div class="chip-row">
+            <div class="chip">
+              <span class="chip-dot" style="background:#d4ff4e;"></span>
+              Local filesystem (<code style="font-family:'Geist Mono',monospace;font-size:11px;">.claude/settings.json</code>)
+            </div>
+            <div class="chip">
+              <span class="chip-dot" style="background:#4e9fff;"></span>
+              Browser localStorage (dashboard UI only)
+            </div>
+          </div>
+          <p class="section-body" style="margin-top:18px;">
+            No credentials or user data are transmitted to, or stored on, any server operated by PinForge.
+          </p>
+        </div>
+      </article>
+
+      <!-- 04 Third-Party Services -->
+      <article class="section-card" id="third-party" data-delay="240">
+        <div class="section-card-inner">
+          <div class="section-num">04</div>
+          <h2 class="section-heading">Third-Party Services</h2>
+          <p class="section-body">
+            PinForge communicates with the following external APIs on behalf of the account owner. Each service is subject to its own independent privacy policy.
+          </p>
+          <div class="chip-row">
+            <div class="chip">
+              <span class="chip-dot" style="background:#e60023;"></span>
+              Pinterest API v5
+            </div>
+            <div class="chip">
+              <span class="chip-dot" style="background:#ff4eaa;"></span>
+              Meta Graph API v22 (Instagram)
+            </div>
+            <div class="chip">
+              <span class="chip-dot" style="background:#d4ff4e;"></span>
+              Nano Banana Image Generation API
+            </div>
+          </div>
+          <p class="section-body" style="margin-top:18px;">
+            PinForge does not control, and is not responsible for, the data practices of these third-party platforms.
+          </p>
+        </div>
+      </article>
+
+      <!-- 05 No Data Sharing -->
+      <article class="section-card" id="no-sharing" data-delay="320">
+        <div class="section-card-inner">
+          <div class="section-num">05</div>
+          <h2 class="section-heading">No Data Sharing</h2>
+          <p class="section-body">
+            PinForge does not sell, rent, disclose, or share any data — personal or otherwise — with any third party, advertiser, analytics provider, or data broker.
+            <br /><br />
+            There are no embedded <strong>advertising SDKs</strong>, no <strong>user profiling systems</strong>, and no <strong>cross-app tracking</strong> mechanisms of any kind within this application.
+          </p>
+        </div>
+      </article>
+
+      <!-- 06 Contact -->
+      <article class="section-card contact-card" id="contact" data-delay="400">
+        <div class="section-card-inner">
+          <div class="section-num">06</div>
+          <h2 class="section-heading">Contact</h2>
+          <p class="section-body">
+            For any questions or concerns regarding this privacy policy, please reach out directly to the developer.
+          </p>
+          <a href="mailto:diego.baeza.h@gmail.com" class="contact-email">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            diego.baeza.h@gmail.com
+          </a>
+        </div>
+      </article>
+
+    </main>
+  </div>
+
+  <!-- ── Footer ── -->
+  <footer class="page-footer">
+    <div class="footer-brand">
+      <div class="nav-logo-mark" style="width:20px;height:20px;border-radius:5px;">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#050505" stroke-width="2.8"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      PinForge
+    </div>
+    <div class="footer-copy">© 2026 PinForge · All rights reserved · v2.0</div>
+  </footer>
+
+  <script>
+    // ── Scroll-driven section reveal ──────────────────────────────
+    const cards = document.querySelectorAll('.section-card');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const delay = parseInt(entry.target.dataset.delay || 0);
+          setTimeout(() => entry.target.classList.add('visible'), delay);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    cards.forEach(c => observer.observe(c));
+
+    // ── Active sidebar nav on scroll ─────────────────────────────
+    const navItems = document.querySelectorAll('.section-nav-item');
+    const sections = [...cards];
+
+    const secObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          navItems.forEach(item => {
+            item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+          });
+        }
+      });
+    }, { threshold: 0.5 });
+    sections.forEach(s => secObserver.observe(s));
+  </script>
 </body>
 </html>
